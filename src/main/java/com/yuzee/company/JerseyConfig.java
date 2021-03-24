@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -22,6 +23,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
+
+import com.yuzee.company.exception.ConstraintViolationExceptionMapper;
+import com.yuzee.company.exception.GlobalExceptionHandler;
 
 @Configuration("jerseyConfig")
 public class JerseyConfig extends ResourceConfig  {
@@ -49,10 +53,13 @@ public class JerseyConfig extends ResourceConfig  {
 		scanner.addIncludeFilter(new AnnotationTypeFilter(Configuration.class));
 
 		super.registerClasses(scanner.findCandidateComponents("com.yuzee").stream().map(beanDefinition -> ClassUtils.resolveClassName(beanDefinition.getBeanClassName(), super.getClassLoader())).collect(Collectors.toSet()));
-
+		
+		
 		Map<String, MediaType> mediaTypes = new HashMap<>();
 		mediaTypes.put("xml", MediaType.APPLICATION_XML_TYPE);
 		mediaTypes.put("json", MediaType.APPLICATION_JSON_TYPE);
 		register(new UriConnegFilter(mediaTypes, null));
+		register(ConstraintViolationExceptionMapper.class);
+		register(GlobalExceptionHandler.class);
 	}
 }

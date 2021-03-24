@@ -12,6 +12,7 @@ import org.springframework.util.ObjectUtils;
 import com.yuzee.company.dao.CompanyDao;
 import com.yuzee.company.dao.CompanyScholarshipDao;
 import com.yuzee.company.dto.CompanyScholarshipGenericDto;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.UnauthorizeException;
 import com.yuzee.company.model.Company;
@@ -31,7 +32,7 @@ public class CompanyScholarshipSuccessfulCandidateProcessor {
 	private CompanyScholarshipDao companyScholarshipDao;
 	
 	@Transactional
-	public CompanyScholarshipGenericDto addUpdateCompanyScholarshipSuccessfulCandidate(String userId , String companyId, String companyScholarshipId, CompanyScholarshipGenericDto companyScholarshipGenericDto) throws NotFoundException, UnauthorizeException {
+	public CompanyScholarshipGenericDto addUpdateCompanyScholarshipSuccessfulCandidate(String userId , String companyId, String companyScholarshipId, CompanyScholarshipGenericDto companyScholarshipGenericDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.debug("Inside CompanyScholarshipSuccessfulCandidateProcessor.addUpdateCompanyScholarshipHowToApply() method");
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);

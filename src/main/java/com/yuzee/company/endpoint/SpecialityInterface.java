@@ -15,18 +15,16 @@ import javax.ws.rs.core.Response;
 import com.yuzee.company.dto.SpecialityDto;
 
 @Path("/api/v1")
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public interface SpecialityInterface {
 	
 	@GET
 	@Path("/speciality")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getSpecialityBySearchText(@QueryParam("search_text") String searchText );
 	
 	@POST
 	@Path("/admin/speciality")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response addSpeciality(@Valid @NotNull List<SpecialityDto> listOfSpeciality);
 
 }

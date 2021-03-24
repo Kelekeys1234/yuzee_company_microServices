@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yuzee.company.dto.CompanyStaffInterviewDto;
 import com.yuzee.company.endpoint.CompanyStaffInterviewInterface;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
@@ -25,7 +26,7 @@ public class CompanyStaffInterviewController implements CompanyStaffInterviewInt
 
 	@Override
 	public Response addCompanyStaffInterview(String userId, String companyId,
-			CompanyStaffInterviewDto companyStaffInterviewDto) throws NotFoundException, UnauthorizeException {
+			CompanyStaffInterviewDto companyStaffInterviewDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Inside CompanyStaffInterviewController.addCompanyStaffInterview() method");
 		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyStaffInterviewProcessor.addCompanyStaffInterview(userId, companyId, companyStaffInterviewDto)).setMessage("Company staff interview added successfully")
 				.create();
@@ -33,7 +34,7 @@ public class CompanyStaffInterviewController implements CompanyStaffInterviewInt
 
 	@Override
 	public Response updateCompanyStaffInterview(String userId, String companyId, String staffInterviewId,
-			CompanyStaffInterviewDto companyStaffInterviewDto) throws NotFoundException, UnauthorizeException {
+			CompanyStaffInterviewDto companyStaffInterviewDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Inside CompanyStaffInterviewController.updateCompanyStaffInterview() method");
 		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyStaffInterviewProcessor.updateCompanyStaffInterview(userId, companyId, staffInterviewId, companyStaffInterviewDto)).setMessage("Company staff interview updated successfully")
 				.create();

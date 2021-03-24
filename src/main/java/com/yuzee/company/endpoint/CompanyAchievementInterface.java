@@ -20,35 +20,27 @@ import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
 
 @Path("/api/v1")
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public interface CompanyAchievementInterface {
 	
 	@POST
 	@Path("/company/{companyId}/achievement")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response addCompanyAchievement(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId,@Valid  @NotNull(message = "Request body should not be null") CompanyAchievementDto companyAchievementDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 
 	@PUT
 	@Path("/company/{companyId}/achievement/{achievementId}")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response updateCompanyAchievement(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("achievementId") String achievementId,@Valid  @NotNull(message = "Request body should not be null") CompanyAchievementDto companyAchievementDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 
 	@GET
 	@Path("/company/{companyId}/achievement")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getAllCompanyAchievement(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId) throws NotFoundException;
 
 	@DELETE
 	@Path("/company/{companyId}/achievement/{achievementId}")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response deleteCompanyAchievement(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("achievementId") String achievementId) throws NotFoundException, ServiceInvokeException, UnauthorizeException;
 	
 	@GET
 	@Path("/company/{companyId}/achievement/{achievementId}")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getCompanyAchievement(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("achievementId") String achievementId) throws NotFoundException, ServiceInvokeException;
 }

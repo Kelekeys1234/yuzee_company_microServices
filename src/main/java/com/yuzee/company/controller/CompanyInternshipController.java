@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yuzee.company.dto.CompanyInternshipDto;
 import com.yuzee.company.endpoint.CompanyInternshipInterface;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
@@ -25,7 +26,7 @@ public class CompanyInternshipController implements CompanyInternshipInterface {
 
 	@Override
 	public Response addCompanyInternship(String userId, String companyId, CompanyInternshipDto companyInternshipDto)
-			throws NotFoundException, UnauthorizeException {
+			throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Inside CompanyInternshipController.addCompanyInternship () method");
 		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyInternshipProcessor.addCompanyInternship(userId, companyId, companyInternshipDto)).setMessage("Company Internship added successfully")
 				.create();
@@ -33,7 +34,7 @@ public class CompanyInternshipController implements CompanyInternshipInterface {
 
 	@Override
 	public Response updateCompanyInternship(String userId, String companyId, String companyInternshipId,
-			CompanyInternshipDto companyInternshipDto) throws NotFoundException, UnauthorizeException {
+			CompanyInternshipDto companyInternshipDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Inside CompanyInternshipController.updateCompanyInternship () method");
 		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyInternshipProcessor.updateCompanyInternship(userId, companyId, companyInternshipId, companyInternshipDto)).setMessage("Company Internship updated successfully")
 				.create();

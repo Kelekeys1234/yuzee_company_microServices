@@ -18,34 +18,25 @@ import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.UnauthorizeException;
 
 @Path("/api/v1")
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public interface CompanyWorkWithUsInterface {
 	
 	@GET
 	@Path("/company/work-with-us/enum/value")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getAllWorkWithUsEnumValues();
 	
 	@POST
 	@Path("/company/{companyId}/work-with-us")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response addUpdateCompanyWorkWithUs(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId, 
 			@Valid @NotNull(message = "Request body should not be null") CompanyWorkWithUsDto companyWorkWithUsDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 
 	@GET
 	@Path("/company/{companyId}/work-with-us")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getAllCompanyWorkWithUs(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId) throws NotFoundException;
 	
 	@DELETE
 	@Path("/company/{companyId}/work-with-us/{companyWorkWithUsId}")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response deleteCompanyWorkWithUs(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId,
-			@PathParam("companyWorkWithUsId") String companyWorkWithUsId) throws NotFoundException, UnauthorizeException;
-
-
-	
+			@PathParam("companyWorkWithUsId") String companyWorkWithUsId) throws NotFoundException, UnauthorizeException;	
 }

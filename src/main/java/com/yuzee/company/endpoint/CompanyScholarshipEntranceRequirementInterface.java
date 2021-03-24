@@ -17,18 +17,16 @@ import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.UnauthorizeException;
 
 @Path("/api/v1")
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public interface CompanyScholarshipEntranceRequirementInterface {
 	
 	@POST
 	@Path("/company/{companyId}/scholarship/{scholarshipId}/scholarship-entrance-requirement")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response addUpdateCompanyScholarshipEntranceRequirement(@HeaderParam("userId") String userId ,@PathParam("companyId") String companyId,@PathParam("scholarshipId") String scholarshipId, @Valid  @NotNull(message = "Request body should not be null/empty") CompanyScholarshipEntranceRequirementDto companyScholarshipEntranceRequirementDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 
 	@GET
 	@Path("/company/{companyId}/scholarship/{scholarshipId}/scholarship-entrance-requirement")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getCompanyScholarshipEntranceRequirement(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId,@PathParam("scholarshipId") String scholarshipId) throws NotFoundException;
 
 

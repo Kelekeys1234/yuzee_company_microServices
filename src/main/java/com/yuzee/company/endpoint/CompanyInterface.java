@@ -13,30 +13,27 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.yuzee.company.dto.CompanyDto;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
 
 @Path("/api/v1")
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public interface CompanyInterface {
 	
 	@POST
 	@Path("/company/initial-info")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
-	public Response addCompanyInitialInfo(@HeaderParam("userId") String userId, @Valid  @NotNull(message = "Request body should not be null") CompanyDto companyDto);
+	public Response addCompanyInitialInfo(@HeaderParam("userId") String userId, @Valid  @NotNull(message = "Request body should not be null") CompanyDto companyDto) throws BadRequestException;
 
 	@PUT
 	@Path("/company/{companyId}/initial-info")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
-	public Response updateCompanyInitialInfo(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId ,@Valid  @NotNull(message = "Request body should not be null") CompanyDto companyDto) throws NotFoundException, UnauthorizeException;
+	public Response updateCompanyInitialInfo(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId ,@Valid  @NotNull(message = "Request body should not be null") CompanyDto companyDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 	
 	
 	@GET
 	@Path("/company/{companyId}/initial-info")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getCompanyInitialInfo(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId) throws NotFoundException, ServiceInvokeException;
 	
 }

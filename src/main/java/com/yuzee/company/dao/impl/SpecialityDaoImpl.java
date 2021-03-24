@@ -2,6 +2,7 @@ package com.yuzee.company.dao.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,10 @@ public class SpecialityDaoImpl implements SpecialityDao {
 	@Override
 	public Optional<Speciality> getSpecialityById(String specialityId) {
 		return specialityRepository.findById(specialityId);
+	}
+
+	@Override
+	public List<Speciality> getSpecialityByIds(Set<String> specialityIds) {
+		return specialityRepository.findAllById(specialityIds);
 	}
 }

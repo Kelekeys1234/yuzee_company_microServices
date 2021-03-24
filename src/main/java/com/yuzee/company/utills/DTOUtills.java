@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -135,20 +136,41 @@ public class DTOUtills {
 		companyLocation.setUpdatedBy("API");
 		companyLocation.setUpdatedOn(new Date());
 		if (!CollectionUtils.isEmpty(companyLocation.getListOfCompanyContactDetail())) {
+			Map<String, CompanyContactDetailsDto> mapOfCompanyContactDeatils = companyLocationDto.getListOfCompanyContactDetailsDto().stream().collect(Collectors.toMap(CompanyContactDetailsDto::getKey, e->e));
 			log.info("Removing all company contact details which is not present in lastest list passed in request");
 			companyLocation.getListOfCompanyContactDetail().removeIf(companyContactDetails -> !companyLocationDto.getListOfCompanyContactDetailsDto().stream().anyMatch(companyContactDetailsDto -> companyContactDetails.getKey().equals(companyContactDetailsDto.getKey())));
 			log.info("Adding additional company contact details found in request but not present in exsiting company contact details");
 			companyContactDetailsDtos = companyLocationDto.getListOfCompanyContactDetailsDto().stream().filter(companyContactDetailsDto -> companyLocation.getListOfCompanyContactDetail().stream().anyMatch(companyContactDetails -> !companyContactDetails.getKey().equalsIgnoreCase(companyContactDetailsDto.getKey()))).collect(Collectors.toList());
+			log.info("Updating value of already added company contact details");
+			List<CompanyContactDetail> contactDetailsToBeUpdated =  companyLocation.getListOfCompanyContactDetail().stream().filter(companyContactDetails -> companyLocationDto.getListOfCompanyContactDetailsDto().stream().anyMatch(companyContactDetailsDto -> companyContactDetails.getKey().equalsIgnoreCase(companyContactDetailsDto.getKey()))).collect(Collectors.toList());
+			contactDetailsToBeUpdated.stream().forEach(companyContactDetail -> {
+				companyContactDetail.setValue(mapOfCompanyContactDeatils.get(companyContactDetail.getKey()).getValue());
+				companyContactDetail.setUpdatedOn(new Date());
+			});
 		} else {
 			log.info("Adding all company contact details");
 			companyContactDetailsDtos = companyLocationDto.getListOfCompanyContactDetailsDto();
 		}
 	
 		if (!CollectionUtils.isEmpty(companyLocation.getListOfCompanyWorkingHours())) {
+			Map<String, CompanyWorkingHoursDto> mapOfCompanyWorkingHoursDto = companyLocationDto.getListOfCompanyWorkingHoursDto().stream().collect(Collectors.toMap(CompanyWorkingHoursDto::getDayOfWeek, e->e));
 			log.info("Removing all company working hours details which is not present in lastest request");
 			companyLocation.getListOfCompanyWorkingHours().removeIf(companyWorkingHour -> !companyLocationDto.getListOfCompanyWorkingHoursDto().stream().anyMatch(companyWorkingHoursDto -> companyWorkingHour.getWeekDay().equals(companyWorkingHoursDto.getDayOfWeek())));
 			log.info("Adding additional company working hours found in request but not present in exsiting request");
 			companyWorkingHoursDtos = companyLocationDto.getListOfCompanyWorkingHoursDto().stream().filter(companyWorkingHoursDto -> companyLocation.getListOfCompanyWorkingHours().stream().anyMatch(companyWorkingHour -> !companyWorkingHour.getWeekDay().equalsIgnoreCase(companyWorkingHoursDto.getDayOfWeek()))).collect(Collectors.toList());
+			log.info("Updating value of already added company working hours");
+			List<CompanyWorkingHours> companyWorkingHoursToBeUpdated =  companyLocation.getListOfCompanyWorkingHours().stream().filter(companyWorkingHours -> companyLocationDto.getListOfCompanyWorkingHoursDto().stream().anyMatch(companyWorkingHoursDto -> companyWorkingHours.getWeekDay().equalsIgnoreCase(companyWorkingHoursDto.getDayOfWeek()))).collect(Collectors.toList());
+			companyWorkingHoursToBeUpdated.stream().forEach(companyWorkingHour -> {
+				CompanyWorkingHoursDto companyWorkingHoursDto =mapOfCompanyWorkingHoursDto.get(companyWorkingHour.getWeekDay());
+				try {
+					companyWorkingHour.setOpeningAt(new Time(formatter.parse(companyWorkingHoursDto.getOpenAt()).getTime()));
+					companyWorkingHour.setClosingAt(new Time(formatter.parse(companyWorkingHoursDto.getCloseAt()).getTime()));
+				} catch (ParseException e1) {
+					log.error("Exception occured",e1);
+				}
+				
+				companyWorkingHour.setIsOffDay(companyWorkingHoursDto.getIsOffDay());
+			});
 		} else {
 			log.info("Adding all company working hours dto");
 			companyWorkingHoursDtos = companyLocationDto.getListOfCompanyWorkingHoursDto();

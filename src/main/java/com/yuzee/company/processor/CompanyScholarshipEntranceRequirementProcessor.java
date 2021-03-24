@@ -17,6 +17,7 @@ import com.yuzee.company.dao.CompanyDao;
 import com.yuzee.company.dao.CompanyScholarshipDao;
 import com.yuzee.company.dto.CompanyScholarshipEntranceRequirementDto;
 import com.yuzee.company.enumeration.Gender;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.UnauthorizeException;
 import com.yuzee.company.model.Company;
@@ -37,7 +38,7 @@ public class CompanyScholarshipEntranceRequirementProcessor {
 	private CompanyScholarshipDao companyScholarshipDao;
 	
 	@Transactional
-	public CompanyScholarshipEntranceRequirementDto addUpdateCompanyScholarshipEntranceRequirement (String userId , String companyId ,String companyScholarshipId , CompanyScholarshipEntranceRequirementDto companyScholarshipEntranceRequirementDto) throws NotFoundException, UnauthorizeException {
+	public CompanyScholarshipEntranceRequirementDto addUpdateCompanyScholarshipEntranceRequirement (String userId , String companyId ,String companyScholarshipId , CompanyScholarshipEntranceRequirementDto companyScholarshipEntranceRequirementDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.debug("Inside CompanyScholarshipEntranceRequirementProcessor.addUpdateCompanyScholarshipEntranceRequirement() method");
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);

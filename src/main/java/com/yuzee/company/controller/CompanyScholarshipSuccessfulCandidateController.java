@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yuzee.company.dto.CompanyScholarshipGenericDto;
 import com.yuzee.company.endpoint.CompanyScholarshipSuccessfulCandidateInterface;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.UnauthorizeException;
 import com.yuzee.company.processor.CompanyScholarshipSuccessfulCandidateProcessor;
@@ -24,7 +25,7 @@ public class CompanyScholarshipSuccessfulCandidateController implements CompanyS
 
 	@Override
 	public Response addUpdateCompanyScholarshipSuccessfulCandidate(String userId, String companyId,
-			String scholarshipId, CompanyScholarshipGenericDto companyScholarshipGenericDto) throws NotFoundException, UnauthorizeException {
+			String scholarshipId, CompanyScholarshipGenericDto companyScholarshipGenericDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Inside CompanyScholarshipSuccessfulCandidateController.addUpdateCompanyScholarshipSuccessfulCandidate () method");
 		companyScholarshipSuccessfulCandidateProcessor.addUpdateCompanyScholarshipSuccessfulCandidate(userId, companyId, scholarshipId, companyScholarshipGenericDto);
 		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setMessage("Company scholarship successful candidate added successfully")

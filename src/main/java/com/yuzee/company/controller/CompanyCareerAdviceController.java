@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yuzee.company.dto.CompanyCareerAdviceDto;
 import com.yuzee.company.endpoint.CompanyCareerAdviceInterface;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
@@ -25,7 +26,7 @@ public class CompanyCareerAdviceController implements CompanyCareerAdviceInterfa
 
 	@Override
 	public Response addCareerAdvice(String userId, String companyId, CompanyCareerAdviceDto companyCareerAdviceDto)
-			throws NotFoundException, UnauthorizeException {
+			throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Inside CompanyCareerAdviceController.addCareerAdvice () method");
 		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyCareerAdviceProcessor.addCompanyCareerAdvice(userId, companyId, companyCareerAdviceDto)).setMessage("Company career advice added successfully")
 				.create();
@@ -33,7 +34,7 @@ public class CompanyCareerAdviceController implements CompanyCareerAdviceInterfa
 
 	@Override
 	public Response updateCareerAdvice(String userId, String companyId, String careerAdviceId,
-			CompanyCareerAdviceDto companyCareerAdviceDto) throws NotFoundException, UnauthorizeException {
+			CompanyCareerAdviceDto companyCareerAdviceDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Inside CompanyCareerAdviceController.updateCareerAdvice () method");
 		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyCareerAdviceProcessor.updateCompanyCareerAdvice(userId, companyId, careerAdviceId, companyCareerAdviceDto)).setMessage("Company career advice updated successfully")
 				.create();

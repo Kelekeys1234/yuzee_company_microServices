@@ -17,21 +17,19 @@ import org.springframework.util.ObjectUtils;
 
 import com.yuzee.company.dao.CompanyDao;
 import com.yuzee.company.dao.CompanyInternshipDao;
-import com.yuzee.company.dto.CompanyCareerAdviceDto;
 import com.yuzee.company.dto.CompanyInternshipDto;
 import com.yuzee.company.dto.StorageDto;
 import com.yuzee.company.enumeration.EntitySubTypeEnum;
 import com.yuzee.company.enumeration.EntityTypeEnum;
 import com.yuzee.company.enumeration.PrivacyLevelEnum;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
 import com.yuzee.company.handler.StorageHandler;
 import com.yuzee.company.model.Company;
-import com.yuzee.company.model.CompanyCareerAdvice;
 import com.yuzee.company.model.CompanyInternship;
 import com.yuzee.company.model.InternshipMember;
-import com.yuzee.company.model.InterviewTagedUser;
 import com.yuzee.company.utills.ValidationUtills;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +47,7 @@ public class CompanyInternshipProcessor {
 	@Autowired
 	private StorageHandler storageHandler;
 	
-	public CompanyInternshipDto addCompanyInternship (String userId , String companyId, CompanyInternshipDto companyInternshipDto) throws NotFoundException, UnauthorizeException {
+	public CompanyInternshipDto addCompanyInternship (String userId , String companyId, CompanyInternshipDto companyInternshipDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.debug("Inside CompanyInternshipProcessor.addCompanyInternship () method");
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
@@ -165,7 +163,7 @@ public class CompanyInternshipProcessor {
 	}
 	
 	@Transactional(rollbackOn = Throwable.class)
-	public CompanyInternshipDto updateCompanyInternship (String userId , String companyId, String internshipId, CompanyInternshipDto companyInternshipDto) throws NotFoundException, UnauthorizeException {
+	public CompanyInternshipDto updateCompanyInternship (String userId , String companyId, String internshipId, CompanyInternshipDto companyInternshipDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.debug("Inside CompanyInternshipProcessor.deleteCompanyInternship () method");
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);

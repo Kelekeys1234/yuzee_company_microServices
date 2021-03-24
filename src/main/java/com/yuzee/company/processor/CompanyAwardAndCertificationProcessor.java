@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -15,9 +17,11 @@ import org.springframework.util.ObjectUtils;
 import com.yuzee.company.dao.CompanyAwardAndCertificationDao;
 import com.yuzee.company.dao.CompanyDao;
 import com.yuzee.company.dto.CompanyAwardAndCertificationDto;
+import com.yuzee.company.dto.StorageDto;
 import com.yuzee.company.enumeration.EntitySubTypeEnum;
 import com.yuzee.company.enumeration.EntityTypeEnum;
 import com.yuzee.company.enumeration.PrivacyLevelEnum;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
@@ -42,7 +46,7 @@ public class CompanyAwardAndCertificationProcessor {
 	@Autowired
 	private StorageHandler storageHandler;
 	
-	public CompanyAwardAndCertificationDto addCompanyAwardAndCertification (String userId , String companyId , CompanyAwardAndCertificationDto companyAwardAndCertificationDto) throws NotFoundException, UnauthorizeException {
+	public CompanyAwardAndCertificationDto addCompanyAwardAndCertification (String userId , String companyId , CompanyAwardAndCertificationDto companyAwardAndCertificationDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.debug("Inside CompanyAwardAndCertificationProcessor.addCompanyAwardAndCertification () method");
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
@@ -102,13 +106,20 @@ public class CompanyAwardAndCertificationProcessor {
 		} else {
 			listOfCompanyAwardAndCertification = companyAwardAndCertificationDao.getCompanyAwardAndCertificationByCompanyIdAndPrivacyLevel(companyId, PrivacyLevelEnum.PUBLIC);
 		}
+		List<StorageDto> listOfStorages = new ArrayList<>();
+		Map<String, List<StorageDto>> mapOfStorage = null;
+		List<String> awardAndCertIds = listOfCompanyAwardAndCertification.stream().map(CompanyAwardAndCertification::getId).collect(Collectors.toList());
+		try {
+			listOfStorages = storageHandler.getStoragesResponse(awardAndCertIds, EntityTypeEnum.COMPANY, EntitySubTypeEnum.LOGO, Arrays.asList(PrivacyLevelEnum.PUBLIC.name()));
+			mapOfStorage = listOfStorages.stream().collect(Collectors.groupingBy(StorageDto::getEntityId, Collectors.toList()));
+		
+		} catch (NotFoundException | ServiceInvokeException e1) {
+			log.error("Exception occured which calling storage for having exception {}",e1);
+		}
+		final Map<String, List<StorageDto>> finalMapOfStorage = mapOfStorage;
 		listOfCompanyAwardAndCertification.stream().forEach(companyAwardAndCertification -> {
 				CompanyAwardAndCertificationDto companyAwardAndCertificationDto =  DTOUtills.populateCompanyAwardAndCertificationDtoFromCompanyAwardAndCertificationModel(companyAwardAndCertification);
-				try {
-					companyAwardAndCertificationDto.setListOfStorageDto(storageHandler.getStoragesResponse(companyAwardAndCertification.getId(), EntityTypeEnum.COMPANY, EntitySubTypeEnum.LOGO, Arrays.asList(PrivacyLevelEnum.PUBLIC.name())));
-				} catch (NotFoundException | ServiceInvokeException e) {
-					log.error("Exception occured which calling storage for entity id {} having exception {}",companyAwardAndCertification.getId(),e);
-				}
+				companyAwardAndCertificationDto.setListOfStorageDto(finalMapOfStorage.get(companyAwardAndCertification.getId()));
 				listOfCompanyAwardAndCertificationDto.add(companyAwardAndCertificationDto);
 			});
 		
@@ -116,7 +127,7 @@ public class CompanyAwardAndCertificationProcessor {
 	}
 	
 	@Transactional(rollbackOn = Throwable.class)
-	public CompanyAwardAndCertificationDto updateCompanyAwardAndCertification (String userId , String companyId , String awardCertificationId , CompanyAwardAndCertificationDto companyAwardAndCertificationDto) throws NotFoundException, UnauthorizeException {
+	public CompanyAwardAndCertificationDto updateCompanyAwardAndCertification (String userId , String companyId , String awardCertificationId , CompanyAwardAndCertificationDto companyAwardAndCertificationDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.debug("Inside CompanyAwardAndCertificationProcessor.addCompanyAwardAndCertification () method");
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);

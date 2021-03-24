@@ -3,11 +3,12 @@ package com.yuzee.company.dao;
 import java.util.List;
 
 import com.yuzee.company.enumeration.PrivacyLevelEnum;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.model.CompanyAchievement;
 
 public interface CompanyAchievementDao {
 	
-	public CompanyAchievement addUpdateCompanyAchievement (CompanyAchievement companyAchievement);
+	public CompanyAchievement addUpdateCompanyAchievement (CompanyAchievement companyAchievement) throws BadRequestException;
 	
 	public void deleteCompanyAchievementByCompanyIdAndAchievementId (String companyId , String achievementId);
 	

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yuzee.company.dto.CompanyScholarshipGenericDto;
 import com.yuzee.company.endpoint.CompanyScholarshipConditionInterface;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.UnauthorizeException;
 import com.yuzee.company.processor.CompanyScholarshipConditionProcessor;
@@ -24,7 +25,7 @@ public class CompanyScholarshipConditionController implements CompanyScholarship
 
 	@Override
 	public Response addUpdateCompanyScholarshipCondition(String userId, String companyId, String scholarshipId,
-			 CompanyScholarshipGenericDto companyScholarshipGenericDto) throws NotFoundException, UnauthorizeException {
+			 CompanyScholarshipGenericDto companyScholarshipGenericDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Inside CompanyScholarshipConditionController.addUpdateCompanyScholarshipCondition () method");
 		companyScholarshipConditionProcessor.addUpdateCompanyScholarshipCondition(userId, companyId, scholarshipId, companyScholarshipGenericDto);
 		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setMessage("Company scholarship condition added successfully")

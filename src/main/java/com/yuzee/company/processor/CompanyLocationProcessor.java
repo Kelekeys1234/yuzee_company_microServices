@@ -3,13 +3,14 @@ package com.yuzee.company.processor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import com.yuzee.company.dao.CompanyDao;
@@ -19,6 +20,7 @@ import com.yuzee.company.dto.StorageDto;
 import com.yuzee.company.enumeration.EntitySubTypeEnum;
 import com.yuzee.company.enumeration.EntityTypeEnum;
 import com.yuzee.company.enumeration.PrivacyLevelEnum;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
@@ -43,7 +45,7 @@ public class CompanyLocationProcessor {
 	@Autowired
 	private StorageHandler storageHandler;
 
-	public CompanyLocationDto addCompanyLocation(String userId, String companyId, CompanyLocationDto companyLocationDto) throws NotFoundException, UnauthorizeException {
+	public CompanyLocationDto addCompanyLocation(String userId, String companyId, CompanyLocationDto companyLocationDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
 		if (!optionalCompany.isPresent()) {
@@ -93,16 +95,19 @@ public class CompanyLocationProcessor {
 			listOfCompanyLocation = companyLocationDao.getCompanyLocationByCompanyIdAndPrivacyLevel(companyId, PrivacyLevelEnum.PUBLIC);
 		}
 		
+		List<StorageDto> listOfStorageDto = new ArrayList<>();
+		try {
+			listOfStorageDto =	storageHandler.getStoragesResponse(listOfCompanyLocation.stream().map(CompanyLocation::getId).collect(Collectors.toList()), EntityTypeEnum.COMPANY, EntitySubTypeEnum.LOGO, Arrays.asList(PrivacyLevelEnum.PUBLIC.name()));
+		} catch (NotFoundException | ServiceInvokeException e) {
+			log.error("Exception ocuured while calling storage service {}",e);
+		}
+		log.info("Segregatting list of storage based on entity id");
+		Map<String, List<StorageDto>> mapOfStorageDto = listOfStorageDto.stream().collect(Collectors.groupingBy(StorageDto::getEntityId));
+		
 		log.info("Creating company location dto from company location model");
 		listOfCompanyLocation.stream().forEach(companyLocation -> {
 			CompanyLocationDto companyLocationDto = DTOUtills.populateCompanyLocationDtoFromCompanyLocationModel(companyLocation);
-			log.info("Calling storage serive to fetch icon");
-			try {
-				List<StorageDto> storages = storageHandler.getStoragesResponse(companyLocationDto.getCompanyLocationId(), EntityTypeEnum.COMPANY, EntitySubTypeEnum.LOGO, Arrays.asList(PrivacyLevelEnum.PUBLIC.name()));
-				companyLocationDto.setIcon( !CollectionUtils.isEmpty(storages)  ? storages.get(0): null);
-			} catch (NotFoundException | ServiceInvokeException e) {
-				log.error("Exception occured while calling storage service for location id {} exception {}",companyLocationDto.getCompanyLocationId(),e);
-			}
+			companyLocationDto.setIcon(null != mapOfStorageDto ? null != mapOfStorageDto.get(companyLocation.getId()) ? mapOfStorageDto.get(companyLocation.getId()).get(0) : null : null);
 			listOfCompanyLocationDto.add(companyLocationDto);
 		});
 		
@@ -110,7 +115,7 @@ public class CompanyLocationProcessor {
 	}
 	
 	@Transactional(rollbackOn = Throwable.class)
-	public CompanyLocationDto updateCompanyLocation (String userId , String companyId , String companyLocationId, CompanyLocationDto companyLocationDto ) throws NotFoundException, UnauthorizeException {
+	public CompanyLocationDto updateCompanyLocation (String userId , String companyId , String companyLocationId, CompanyLocationDto companyLocationDto ) throws NotFoundException, UnauthorizeException, BadRequestException {
 		
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);

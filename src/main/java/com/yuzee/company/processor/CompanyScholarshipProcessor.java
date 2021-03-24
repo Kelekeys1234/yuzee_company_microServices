@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 import com.yuzee.company.dao.CompanyDao;
 import com.yuzee.company.dao.CompanyScholarshipDao;
 import com.yuzee.company.dto.CompanyScholarshipDto;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
@@ -37,7 +38,7 @@ public class CompanyScholarshipProcessor {
 	@Autowired
 	private StorageHandler storageHandler;
 	
-	public CompanyScholarshipDto addCompanyScholarship(String userId, String companyId, CompanyScholarshipDto companyScholarshipDto) throws NotFoundException, UnauthorizeException {
+	public CompanyScholarshipDto addCompanyScholarship(String userId, String companyId, CompanyScholarshipDto companyScholarshipDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.debug("Inside CompanyScholarshipProcessor.addCompanyScholarship() method");
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
@@ -58,7 +59,7 @@ public class CompanyScholarshipProcessor {
 	}
 	
 	@Transactional(rollbackOn = Throwable.class)
-	public CompanyScholarshipDto updateCompanyScholarship(String userId, String companyId,String companyScholarshipId , CompanyScholarshipDto companyScholarshipDto) throws NotFoundException, UnauthorizeException {
+	public CompanyScholarshipDto updateCompanyScholarship(String userId, String companyId,String companyScholarshipId , CompanyScholarshipDto companyScholarshipDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.debug("Inside CompanyScholarshipProcessor.updateCompanyScholarship() method");
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);

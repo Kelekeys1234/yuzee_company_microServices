@@ -3,6 +3,7 @@ package com.yuzee.company.processor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -16,9 +17,11 @@ import org.springframework.util.ObjectUtils;
 import com.yuzee.company.dao.CompanyAchievementDao;
 import com.yuzee.company.dao.CompanyDao;
 import com.yuzee.company.dto.CompanyAchievementDto;
+import com.yuzee.company.dto.StorageDto;
 import com.yuzee.company.enumeration.EntitySubTypeEnum;
 import com.yuzee.company.enumeration.EntityTypeEnum;
 import com.yuzee.company.enumeration.PrivacyLevelEnum;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
@@ -49,7 +52,7 @@ public class CompanyAchievementProcessor {
 	private NotificationHandler notificationHandler;
 
 	@Transactional(rollbackOn = Throwable.class)
-	public CompanyAchievementDto addCompanyAchievement(String userId, String companyId , CompanyAchievementDto companyAchievementDto) throws NotFoundException, UnauthorizeException {
+	public CompanyAchievementDto addCompanyAchievement(String userId, String companyId , CompanyAchievementDto companyAchievementDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
 		if (!optionalCompany.isPresent()) {
@@ -91,7 +94,7 @@ public class CompanyAchievementProcessor {
 	}
 	
 	@Transactional(rollbackOn = Throwable.class)
-	public CompanyAchievementDto updateCompanyAchievement(String userId, String companyId , String achievementId , CompanyAchievementDto companyAchievementDto) throws NotFoundException, UnauthorizeException {
+	public CompanyAchievementDto updateCompanyAchievement(String userId, String companyId , String achievementId , CompanyAchievementDto companyAchievementDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
 		if (!optionalCompany.isPresent()) {
@@ -133,13 +136,20 @@ public class CompanyAchievementProcessor {
 		}
 	
 		if (!CollectionUtils.isEmpty(listOfCompanyAchievement)) {
+			List<StorageDto> listOfStorages = new ArrayList<>();
+			Map<String, List<StorageDto>> mapOfStorage = null;
+			List<String> achievementIds = listOfCompanyAchievement.stream().map(CompanyAchievement::getId).collect(Collectors.toList());
+			try {
+				listOfStorages = storageHandler.getStoragesResponse(achievementIds, EntityTypeEnum.COMPANY, EntitySubTypeEnum.COMPANY_ACHIEVEMENT_CERTIFICATES, isAdmin ? Arrays.asList(PrivacyLevelEnum.PUBLIC.name() , PrivacyLevelEnum.PRIVATE.name()) : Arrays.asList(PrivacyLevelEnum.PUBLIC.name()));
+				mapOfStorage = listOfStorages.stream().collect(Collectors.groupingBy(StorageDto::getEntityId, Collectors.toList()));
+			
+			} catch (NotFoundException | ServiceInvokeException e1) {
+				log.error("Exception occured which calling storage for having exception {}",e1);
+			}
+			final Map<String, List<StorageDto>> finalMapOfStorage = mapOfStorage;
 			listOfCompanyAchievement.stream().forEach(companyAchievement -> {
 				CompanyAchievementDto companyAchievementDto = DTOUtills.populateCompanyAchievementDtoFromCompanyModel(companyAchievement);
-				try {
-					companyAchievementDto.setListOfStorageDto(storageHandler.getStoragesResponse(companyAchievementDto.getCompanyAchievementId(), EntityTypeEnum.COMPANY, EntitySubTypeEnum.COMPANY_ACHIEVEMENT_CERTIFICATES, isAdmin ? Arrays.asList(PrivacyLevelEnum.PUBLIC.name() , PrivacyLevelEnum.PRIVATE.name()) : Arrays.asList(PrivacyLevelEnum.PUBLIC.name())));
-				} catch (NotFoundException | ServiceInvokeException e) {
-					log.error("Exception occured which calling storage for entity id {} having exception {}",companyAchievementDto.getCompanyAchievementId(),e);
-				}
+				companyAchievementDto.setListOfStorageDto(finalMapOfStorage.get(companyAchievement.getId()) );
 				companyAchievementDto.setTagedUser(companyAchievement.getListOfAchievementTagedUser().stream().map(AchievementTagedUser::getUserId).collect(Collectors.toSet()));
 				listOfCompanyAchievementDto.add(companyAchievementDto);
 			});

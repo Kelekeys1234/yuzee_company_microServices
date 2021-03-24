@@ -18,18 +18,16 @@ import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
 
 @Path("/api/v1")
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public interface CompanyPartnerInterface {
 
 	@POST
 	@Path("/company/{companyId}/partner")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response addUpdateCompanyPartner(@HeaderParam("userId") String userId ,@PathParam("companyId") String companyId, @Valid   @NotEmpty(message = "Request body should not be null/empty")  CompanyPartnerDetailDto companyPartnerDetailDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 
 	@GET
 	@Path("/company/{companyId}/partner")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getAllCompanyPartner(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId) throws NotFoundException, ServiceInvokeException;
 	
 }

@@ -22,6 +22,7 @@ import com.yuzee.company.dto.StorageDto;
 import com.yuzee.company.enumeration.EntitySubTypeEnum;
 import com.yuzee.company.enumeration.EntityTypeEnum;
 import com.yuzee.company.enumeration.PrivacyLevelEnum;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
@@ -46,7 +47,7 @@ public class CompanyCareerAdviceProcessor {
 	@Autowired
 	private StorageHandler storageHandler;
 
-	public CompanyCareerAdviceDto addCompanyCareerAdvice(String userId , String companyId, CompanyCareerAdviceDto companyCareerAdviceDto ) throws NotFoundException, UnauthorizeException {
+	public CompanyCareerAdviceDto addCompanyCareerAdvice(String userId , String companyId, CompanyCareerAdviceDto companyCareerAdviceDto ) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.debug("Inside CompanyCareerAdviceProcessor.addCompanyCareerAdvice () method");
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
@@ -134,7 +135,7 @@ public class CompanyCareerAdviceProcessor {
 	}
 	
 	@Transactional(rollbackOn =  Throwable.class)
-	public CompanyCareerAdviceDto updateCompanyCareerAdvice(String userId , String companyId, String companyCareerAdviceId, CompanyCareerAdviceDto companyCareerAdviceDto ) throws NotFoundException, UnauthorizeException {
+	public CompanyCareerAdviceDto updateCompanyCareerAdvice(String userId , String companyId, String companyCareerAdviceId, CompanyCareerAdviceDto companyCareerAdviceDto ) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.debug("Inside CompanyCareerAdviceProcessor.updateCompanyCareerAdvice () method");
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);

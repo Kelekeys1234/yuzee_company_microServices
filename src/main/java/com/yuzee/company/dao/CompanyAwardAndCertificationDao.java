@@ -3,11 +3,12 @@ package com.yuzee.company.dao;
 import java.util.List;
 
 import com.yuzee.company.enumeration.PrivacyLevelEnum;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.model.CompanyAwardAndCertification;
 
 public interface CompanyAwardAndCertificationDao {
 	
-	public CompanyAwardAndCertification addUpdateCompanyAwardAndCertification (CompanyAwardAndCertification companyAwardAndCertification) ;
+	public CompanyAwardAndCertification addUpdateCompanyAwardAndCertification (CompanyAwardAndCertification companyAwardAndCertification) throws BadRequestException ;
 
 	public void deleteByCompanyIdAndId(String companyId , String id);
 	

@@ -15,6 +15,7 @@ import com.yuzee.company.dao.CompanyDao;
 import com.yuzee.company.dao.CompanyWorkWithUsDao;
 import com.yuzee.company.dto.CompanyWorkWithUsDto;
 import com.yuzee.company.enumeration.WorkWithUs;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.UnauthorizeException;
 import com.yuzee.company.model.Company;
@@ -34,7 +35,7 @@ public class CompanyWorkWithUsProcessor {
 	private CompanyWorkWithUsDao companyWorkWithUsDao;
 
 	@Transactional(rollbackOn = Throwable.class)
-	public CompanyWorkWithUsDto addUpdateCompanyWorkWithUs(String userId, String companyId, CompanyWorkWithUsDto companyWorkWithUsDto) throws NotFoundException, UnauthorizeException {
+	public CompanyWorkWithUsDto addUpdateCompanyWorkWithUs(String userId, String companyId, CompanyWorkWithUsDto companyWorkWithUsDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		CompanyWorkWithUs companyWorkWithUs = null;
 		log.debug("Inside CompanyWorkWithUsProcessor.addUpdateCompanyWorkWithUs() method");
 		log.info("Getting company with companyId {}", companyId);

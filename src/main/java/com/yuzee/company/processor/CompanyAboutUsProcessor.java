@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -21,6 +22,7 @@ import com.yuzee.company.dto.StorageDto;
 import com.yuzee.company.enumeration.EntitySubTypeEnum;
 import com.yuzee.company.enumeration.EntityTypeEnum;
 import com.yuzee.company.enumeration.PrivacyLevelEnum;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
@@ -47,7 +49,7 @@ public class CompanyAboutUsProcessor {
 	private StorageHandler storageHandler;
 
 	@Transactional(rollbackOn = Throwable.class)
-	public CompanyAboutUsDto addUpdateCompanyAboutUsInfo (String userId, String companyId , CompanyAboutUsDto companyAboutUsDto) throws NotFoundException, UnauthorizeException {
+	public CompanyAboutUsDto addUpdateCompanyAboutUsInfo (String userId, String companyId , CompanyAboutUsDto companyAboutUsDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
 		if (!optionalCompany.isPresent()) {
@@ -76,14 +78,13 @@ public class CompanyAboutUsProcessor {
 	}
 	
 	private Company populateCompanySpecialityIntoComapny (List<CompanySpecialityDto> listOfCompanySpecialityDto, Company company) {
+		List<Speciality> listOfSpeciality  = new ArrayList<>();
 		log.info("list of exsisting company speciality dto is empty adding all pass in request");
-		listOfCompanySpecialityDto.stream().forEach(companySpecialityDto -> {
-			log.info("Getting speciality for speciality id {}", companySpecialityDto.getSpecialityId());
-			Optional<Speciality> optionalSpeciality = specialityDao.getSpecialityById(companySpecialityDto.getSpecialityId());
-			if (optionalSpeciality.isPresent()) {
-				company.addCompanySpeciality(new CompanySpeciality( optionalSpeciality.get(), new Date (),  new Date (), "API", "API"));
-			}
-		});
+		Set<String> specialityIds = listOfCompanySpecialityDto.stream().map(CompanySpecialityDto::getSpecialityId).collect(Collectors.toSet());
+		if (!CollectionUtils.isEmpty(specialityIds)) {
+			listOfSpeciality = specialityDao.getSpecialityByIds(specialityIds);
+			listOfSpeciality.stream().map(speciality -> new CompanySpeciality( speciality, new Date (),  new Date (), "API", "API")).forEach(company::addCompanySpeciality);
+		}
 		return company;
 	}
 	

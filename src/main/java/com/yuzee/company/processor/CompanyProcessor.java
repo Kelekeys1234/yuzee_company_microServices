@@ -14,6 +14,7 @@ import com.yuzee.company.dto.StorageDto;
 import com.yuzee.company.enumeration.EntitySubTypeEnum;
 import com.yuzee.company.enumeration.EntityTypeEnum;
 import com.yuzee.company.enumeration.PrivacyLevelEnum;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
@@ -34,7 +35,7 @@ public class CompanyProcessor {
 	@Autowired
 	private CompanyDao companyDao;
 	
-	public CompanyDto addCompanyInitialInfo (String userId , CompanyDto companyDto) {
+	public CompanyDto addCompanyInitialInfo (String userId , CompanyDto companyDto) throws BadRequestException {
 		log.info("Creating company model by name {} by userId {}", companyDto.getCompanyName(),userId);
 		Company company = DTOUtills.initiateCompanyModelFromCompanyDto(companyDto);
 		log.info("Setting user id {}",userId);
@@ -46,7 +47,7 @@ public class CompanyProcessor {
 		return companyDto;
 	}
 	
-	public CompanyDto updateCompanyInitialInfo (String userId, String companyId , CompanyDto companyDto) throws NotFoundException, UnauthorizeException {
+	public CompanyDto updateCompanyInitialInfo (String userId, String companyId , CompanyDto companyDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
 		if (!optionalCompany.isPresent()) {

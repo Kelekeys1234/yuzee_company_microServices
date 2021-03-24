@@ -19,29 +19,23 @@ import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
 
 @Path("/api/v1")
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public interface CompanyAwardAndCertificationInterface {
 	
 	@POST
 	@Path("/company/{companyId}/award-and-certification")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response addCompanyAwardAndCertification(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId,@Valid CompanyAwardAndCertificationDto companyAwardAndCertificationDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 
 	@PUT
 	@Path("/company/{companyId}/award-and-certification/{awardCertificationId}")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response updateCompanyAwardAndCertification(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("awardCertificationId") String awardCertificationId,@Valid CompanyAwardAndCertificationDto companyAwardAndCertificationDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 
 	@GET
 	@Path("/company/{companyId}/award-and-certification")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getAllAwardAndCertification(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId) throws NotFoundException;
 
 	@DELETE
 	@Path("/company/{companyId}/award-and-certification/{awardCertificationId}")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response deleteCompanyAwardAndCertification(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("awardCertificationId") String awardCertificationId) throws NotFoundException, ServiceInvokeException, UnauthorizeException;
 }

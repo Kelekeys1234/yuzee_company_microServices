@@ -12,19 +12,17 @@ import javax.ws.rs.core.Response;
 import com.yuzee.company.exception.BadRequestException;
 
 @Path("/api/v1")
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public interface NotificationListingInterface {
 	
 	@GET
 	@Path("/achievement/status/{status}/pageNumber/{pageNumber}/pageSize/{pageSize}")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getAllUserCompanyAchievementTagedRequest(@HeaderParam("userId") String userId,@PathParam("status") String status,@PathParam("pageNumber") Integer pageNumber,
 			@PathParam("pageSize") Integer pageSize) throws BadRequestException;
 	
 	@PUT
 	@Path("/achievement/{achievementId}/status/{status}")
-    @Consumes({ "application/json", "application/xml" })
-    @Produces({ "application/json", "application/xml" })
 	public Response changeCompanyAchievementTagedUserStatus(@HeaderParam("userId") String userId,@PathParam("achievementId") String achievementId,
 			@PathParam("status") String status) throws BadRequestException;
 

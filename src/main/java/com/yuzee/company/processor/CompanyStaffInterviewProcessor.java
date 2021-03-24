@@ -22,6 +22,7 @@ import com.yuzee.company.dto.StorageDto;
 import com.yuzee.company.enumeration.EntitySubTypeEnum;
 import com.yuzee.company.enumeration.EntityTypeEnum;
 import com.yuzee.company.enumeration.PrivacyLevelEnum;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
@@ -47,7 +48,7 @@ public class CompanyStaffInterviewProcessor {
 	private StorageHandler storageHandler;
 
 	@Transactional(rollbackOn = Throwable.class)
-	public CompanyStaffInterviewDto addCompanyStaffInterview(String userId , String companyId, CompanyStaffInterviewDto companyStaffInterviewDto) throws NotFoundException, UnauthorizeException {
+	public CompanyStaffInterviewDto addCompanyStaffInterview(String userId , String companyId, CompanyStaffInterviewDto companyStaffInterviewDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.debug("Inside CompanyStaffInterviewProcessor.addCompanyStaffInterview() method");
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
@@ -70,7 +71,7 @@ public class CompanyStaffInterviewProcessor {
 	}
 
 	@Transactional(rollbackOn = Throwable.class)
-	public CompanyStaffInterviewDto updateCompanyStaffInterview(String userId , String companyId,String companyStaffInterviewId,  CompanyStaffInterviewDto companyStaffInterviewDto) throws NotFoundException, UnauthorizeException {
+	public CompanyStaffInterviewDto updateCompanyStaffInterview(String userId , String companyId,String companyStaffInterviewId,  CompanyStaffInterviewDto companyStaffInterviewDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.debug("Inside CompanyStaffInterviewProcessor.updateCompanyStaffInterview() method");
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
@@ -134,7 +135,7 @@ public class CompanyStaffInterviewProcessor {
 				companyStaffInterviewDto.setDiscription(companyStaffInterview.getDescription());
 				companyStaffInterviewDto.setCompanyStaffInterviewId(companyStaffInterview.getId());
 				companyStaffInterviewDto.setTagedInterviewee(companyStaffInterview.getListOfInterviewTagedUser().stream().map(interviewTagedUser -> interviewTagedUser.getUserId()).collect(Collectors.toSet()));
-				companyStaffInterviewDto.setListOfStorageDto(mapOfStorage.get(companyStaffInterview.getId()));
+				companyStaffInterviewDto.setListOfStorageDto(null != mapOfStorage ? mapOfStorage.get(companyStaffInterview.getId()) : null);
 				listOfCompanyStaffInterviewDto.add(companyStaffInterviewDto);
 			});
 		}

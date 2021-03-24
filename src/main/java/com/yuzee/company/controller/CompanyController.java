@@ -1,6 +1,5 @@
 package com.yuzee.company.controller;
 
-import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -9,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yuzee.company.dto.CompanyDto;
 import com.yuzee.company.endpoint.CompanyInterface;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
@@ -25,14 +25,14 @@ public class CompanyController implements CompanyInterface {
 	private CompanyProcessor companyProcessor;
 
 	@Override
-	public Response addCompanyInitialInfo(String userId, @Valid CompanyDto companyDto) {
+	public Response addCompanyInitialInfo(String userId, CompanyDto companyDto) throws BadRequestException {
 		log.info("Inside CompanyController.addCompanyInitialInfo () method");
 		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyProcessor.addCompanyInitialInfo(userId, companyDto)).setMessage("Company initial info added successfully")
 				.create();
 	}
 
 	@Override
-	public Response updateCompanyInitialInfo(String userId, String companyId, @Valid CompanyDto companyDto) throws NotFoundException, UnauthorizeException {
+	public Response updateCompanyInitialInfo(String userId, String companyId, CompanyDto companyDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Inside CompanyController.updateCompanyInitialInfo () method");
 		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyProcessor.updateCompanyInitialInfo(userId, companyId, companyDto)).setMessage("Company initial info updated successfully")
 				.create();

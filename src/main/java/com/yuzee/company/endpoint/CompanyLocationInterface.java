@@ -20,30 +20,24 @@ import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
 
 @Path("/api/v1")
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public interface CompanyLocationInterface {
 	
 	@POST
 	@Path("/company/{companyId}/location")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response addCompanyLocation(@HeaderParam("userId") String userId ,@PathParam("companyId") String companyId, @Valid @NotNull(message = "Request body should not be null") CompanyLocationDto companyLocationDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 
 	@PUT
 	@Path("/company/{companyId}/location/{locationId}")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response updateCompanyLocation(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("locationId") String locationId,  @Valid @NotNull(message = "Request body should not be null") CompanyLocationDto companyLocationDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 
 	@GET
 	@Path("/company/{companyId}/location")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getAllCompanyLocation(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId) throws NotFoundException;
 
 	@DELETE
 	@Path("/company/{companyId}/location/{locationId}")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response deleteCompanyLocation(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("locationId") String locationId) throws NotFoundException, ServiceInvokeException, UnauthorizeException;
 	
 }

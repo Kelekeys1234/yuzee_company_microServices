@@ -20,30 +20,24 @@ import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
 
 @Path("/api/v1")
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public interface CompanyScholarshipInterface {
 	
 	@POST
 	@Path("/company/{companyId}/scholarship")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response addCompanyScholarship(@HeaderParam("userId") String userId ,@PathParam("companyId") String companyId, @Valid  @NotNull(message = "Request body should not be null/empty") CompanyScholarshipDto companyScholarshipDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 
 	@PUT
 	@Path("/company/{companyId}/scholarship/{scholarshipId}")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response updateCompanyScholarship(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("scholarshipId") String scholarshipId, @Valid  @NotNull(message = "Request body should not be null/empty") CompanyScholarshipDto companyScholarshipDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 
 	@GET
 	@Path("/company/{companyId}/scholarship")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getAllCompanyScholarship(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId) throws NotFoundException;
 
 	@DELETE
 	@Path("/company/{companyId}/scholarship/{scholarshipId}")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response deleteCompanyScholarship(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("scholarshipId") String scholarshipId) throws NotFoundException, ServiceInvokeException, UnauthorizeException;
 	
 

@@ -1,5 +1,8 @@
 package com.yuzee.company.exception;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -10,11 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Provider
 @Slf4j
-public class GlobalExceptionHandler implements ExceptionMapper<Throwable> {
+public class GlobalExceptionHandler implements ExceptionMapper<Exception> {
 	
 
 	@Override
-	public Response toResponse(Throwable exception) {
+	public Response toResponse(Exception exception) {
 		ErrorWrapper errorWrapper = new ErrorWrapper();
 		HttpStatus status = null;
 		if (exception instanceof NotFoundException) {

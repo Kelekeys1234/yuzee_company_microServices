@@ -12,22 +12,21 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.yuzee.company.dto.CompanyScholarshipGenericDto;
+import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.UnauthorizeException;
 
 @Path("/api/v1")
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public interface CompanyScholarshipSuccessfulCandidateInterface {
 	
 	@POST
 	@Path("/company/{companyId}/scholarship/{scholarshipId}/scholarship-successful-candidate")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
-	public Response addUpdateCompanyScholarshipSuccessfulCandidate(@HeaderParam("userId") String userId ,@PathParam("companyId") String companyId,@PathParam("scholarshipId") String scholarshipId, @Valid  @NotNull(message = "Request body should not be null/empty") CompanyScholarshipGenericDto companyScholarshipGenericDto) throws NotFoundException, UnauthorizeException;
+	public Response addUpdateCompanyScholarshipSuccessfulCandidate(@HeaderParam("userId") String userId ,@PathParam("companyId") String companyId,@PathParam("scholarshipId") String scholarshipId, @Valid  @NotNull(message = "Request body should not be null/empty") CompanyScholarshipGenericDto companyScholarshipGenericDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 
 	@GET
 	@Path("/company/{companyId}/scholarship/{scholarshipId}/scholarship-successful-candidate")
-	@Consumes({ "application/json", "application/xml" })
-	@Produces({ "application/json", "application/xml" })
 	public Response getCompanyScholarshipSuccessfulCandidate(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId,@PathParam("scholarshipId") String scholarshipId) throws NotFoundException;
 
 
