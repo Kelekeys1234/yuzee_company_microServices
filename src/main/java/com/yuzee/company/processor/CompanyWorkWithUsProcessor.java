@@ -50,7 +50,7 @@ public class CompanyWorkWithUsProcessor {
 		Company company = optionalCompany.get();
 		log.info("Checking if company work with us present for company id {} and work with us {}",companyId,companyWorkWithUsDto.getTitleName());
 		Optional<CompanyWorkWithUs> optionalCompanyWorkWithUs = companyWorkWithUsDao.getCompanyWorkWithUsByCompanyIdAndWorkWithUsValue(companyId, WorkWithUs.valueOf(companyWorkWithUsDto.getTitleName()));
-		if (optionalCompanyWorkWithUs.isEmpty()) {
+		if (!optionalCompanyWorkWithUs.isPresent()) {
 			log.info("No work with us found for company id and work with us {} so adding new entry",companyId, companyWorkWithUsDto.getTitleName());
 			companyWorkWithUs = new CompanyWorkWithUs( WorkWithUs.valueOf(companyWorkWithUsDto.getTitleName()), company, companyWorkWithUsDto.getDescription(), new Date(), new Date(), "API", "API");
 			
