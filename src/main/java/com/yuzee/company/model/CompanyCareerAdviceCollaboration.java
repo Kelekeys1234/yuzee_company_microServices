@@ -26,14 +26,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "company_preferred_course", uniqueConstraints = @UniqueConstraint( columnNames = { "course_id","course_name","company_career_advice_id"}, name = "UK_CPC_CI_CN_CPCPDII"),
-indexes = { @Index (name = "IDX_COMPANY_PREFERRED_COURSE_CPCPD", columnList="company_career_advice_id", unique = false)})
-public class CompanyPreferredCourse implements Serializable {
-
+@Table(name = "company_career_advice_collaboration")
+public class CompanyCareerAdviceCollaboration implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5547526321763417776L;
+	private static final long serialVersionUID = 1506289549779021818L;
 	
 	@Id
 	@GenericGenerator(name = "generator", strategy = "guid", parameters = {})
@@ -41,11 +39,12 @@ public class CompanyPreferredCourse implements Serializable {
 	@Column(name = "id", unique = true, nullable = false, length=36)
 	private String id;
 	
-	@Column(name = "course_name", nullable = false)
-	private String courseName;
-		
-	@Column(name = "course_id", nullable = false)
-	private String courseId;
+	@Column(name ="user_id", nullable = false)
+	private String userId;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn( name = "company_career_advice_id", insertable = true, updatable = false , nullable = false)
+	private CompanyCareerAdvice companyCareerAdvice;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_on", length = 19)
@@ -60,19 +59,14 @@ public class CompanyPreferredCourse implements Serializable {
 
 	@Column(name = "updated_by", length = 50)
 	private String updatedBy;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn( name = "company_career_advice_id", insertable = true, updatable = false , nullable = false)
-	private CompanyCareerAdvice companyCareerAdvice;
-	
-	public CompanyPreferredCourse(String courseName, Date createdOn, Date updatedOn, String createdBy, String updatedBy,
-			 String courseId) {
+
+	public CompanyCareerAdviceCollaboration(String userId, Date createdOn, Date updatedOn, String createdBy,
+			String updatedBy) {
 		super();
-		this.courseName = courseName;
+		this.userId = userId;
 		this.createdOn = createdOn;
 		this.updatedOn = updatedOn;
 		this.createdBy = createdBy;
 		this.updatedBy = updatedBy;
-		this.courseId = courseId;
 	}
 }

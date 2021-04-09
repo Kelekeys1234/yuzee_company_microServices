@@ -14,11 +14,11 @@ import lombok.Data;
 @Data
 public class CompanyLocationDto {
 	
-	@JsonProperty("icon")
-	private StorageDto icon;
-	
 	@JsonProperty("company_location_id")
 	private String companyLocationId;
+	
+	@JsonProperty("icon")
+	private StorageDto icon;
 	
 	@NotBlank(message = "privacy_level should not be null/blank")
 	@JsonProperty("privacy_level")
@@ -90,7 +90,4 @@ public class CompanyLocationDto {
 		this.isPrimary = isPrimary;
 		this.privacyLevel = privacyLevel;
 	}
-	
-	
-	
 }

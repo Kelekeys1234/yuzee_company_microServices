@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yuzee.company.dto.CompanyInternshipDto;
+import com.yuzee.company.dto.InternshipEducationNeedDto;
+import com.yuzee.company.dto.InternshipSkillsDto;
 import com.yuzee.company.endpoint.CompanyInternshipInterface;
 import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
@@ -64,4 +66,23 @@ public class CompanyInternshipController implements CompanyInternshipInterface {
 				.create();
 	}
 
+	@Override
+	public Response addUpdateCompanyEducationNeed(String userId, String companyId, String companyInternshipId,
+			InternshipEducationNeedDto internshipEducationNeedDto)
+			throws NotFoundException, UnauthorizeException, BadRequestException {
+		log.info("Inside CompanyInternshipController.addUpdateCompanyEducationNeed () method");
+		companyInternshipProcessor.addUpdateEducationNeed(userId, companyId, companyInternshipId, internshipEducationNeedDto);
+		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setMessage("Company Internship education need added/updated successfully")
+				.create();
+	}
+
+	@Override
+	public Response addUpdateCompanyInternshipSkill(String userId, String companyId, String companyInternshipId,
+			InternshipSkillsDto internshipSkillsDto)
+			throws NotFoundException, UnauthorizeException, BadRequestException {
+		log.info("Inside CompanyInternshipController.addUpdateCompanyInternshipSkill () method");
+		companyInternshipProcessor.addUpdateInternshipSkill(userId, companyId, companyInternshipId, internshipSkillsDto);
+		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setMessage("Company Internship skills added/updated successfully")
+				.create();
+	}
 }

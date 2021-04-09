@@ -23,6 +23,7 @@ import com.yuzee.company.dto.CompanyScholarshipDto;
 import com.yuzee.company.dto.CompanySpecialityDto;
 import com.yuzee.company.dto.CompanyWorkingHoursDto;
 import com.yuzee.company.enumeration.AchievementTagedUserRequestStatus;
+import com.yuzee.company.enumeration.CompanyType;
 import com.yuzee.company.enumeration.EntityType;
 import com.yuzee.company.enumeration.IndustryType;
 import com.yuzee.company.enumeration.PrivacyLevelEnum;
@@ -54,6 +55,27 @@ public class DTOUtills {
 		company.setCompanyName(companyDto.getCompanyName());
 		company.setAboutUs(companyDto.getDescription());
 		company.setTagLine(companyDto.getTagLine());
+		company.setIndustry(companyDto.getIndustry());
+		company.setIndustryType(IndustryType.valueOf(companyDto.getIndustryType()));
+		company.setYearFounder(companyDto.getYearFounded());
+		company.setCompanyType(CompanyType.valueOf(companyDto.getCompanyType()));
+		companyDto.getLocations().stream().forEach(companyLocationDto -> {
+			CompanyLocation companyLocation = new CompanyLocation(PrivacyLevelEnum.valueOf(companyLocationDto.getPrivacyLevel()) ,companyLocationDto.getCampusName(), companyLocationDto.getAddress(), companyLocationDto.getCityName(), companyLocationDto.getStateName(), companyLocationDto.getCountryName(), companyLocationDto.getPostalCode(), companyLocationDto.getLatitude(), companyLocationDto.getLongitude(), companyLocationDto.getIsPrimary(), new Date(), new Date(), "API", "API");
+			companyLocationDto.getListOfCompanyContactDetailsDto().stream().forEach(companyContactDetailsDto -> {
+				companyLocation.addContactDetails(new CompanyContactDetail(companyContactDetailsDto.getKey(), companyContactDetailsDto.getValue(), new Date(), new Date(), "API", "API"));
+			});
+			companyLocationDto.getListOfCompanyWorkingHoursDto().stream().forEach(companyWorkingHoursDto -> {
+				try {
+					companyLocation.addCompanyWorkingHours(new CompanyWorkingHours(companyWorkingHoursDto.getDayOfWeek(), new Time(formatter.parse(companyWorkingHoursDto.getOpenAt()).getTime()) ,new Time(formatter.parse(companyWorkingHoursDto.getCloseAt()).getTime()),companyWorkingHoursDto.getIsOffDay() ,new Date(), new Date(), "API", "API"));
+				} catch (ParseException e) {
+					log.error("Excaption occured {}",e);
+				}
+			});
+			company.addCompanyLocation(companyLocation);
+		});
+		
+		company.setUpdatedBy("API");
+		company.setUpdatedOn(new Date());
 		company.setCreatedOn(new Date());
 		return company;
 	}
@@ -62,6 +84,10 @@ public class DTOUtills {
 		company.setCompanyName(companyDto.getCompanyName());
 		company.setAboutUs(companyDto.getDescription());
 		company.setTagLine(companyDto.getTagLine());
+		company.setIndustry(companyDto.getIndustry());
+		company.setIndustryType(IndustryType.valueOf(companyDto.getIndustryType()));
+		company.setYearFounder(companyDto.getYearFounded());
+		company.setCompanyType(CompanyType.valueOf(companyDto.getCompanyType()));
 		company.setUpdatedBy("API");
 		company.setUpdatedOn(new Date());
 		return company;
@@ -73,6 +99,16 @@ public class DTOUtills {
 		companyDto.setCompanyName(company.getCompanyName());
 		companyDto.setDescription(company.getAboutUs());
 		companyDto.setTagLine(company.getTagLine());
+		companyDto.setIndustry(company.getIndustry());
+		companyDto.setIndustryType(company.getIndustryType().name());
+		companyDto.setYearFounded(company.getYearFounder());
+		company.getListOfCompanyLocation().stream().forEach(companyLocation -> {
+			CompanyLocationDto companyLocationDto = new CompanyLocationDto(companyLocation.getId(), companyLocation.getName(), companyLocation.getCity(), companyLocation.getState(), companyLocation.getCountry(), companyLocation.getPostalCode(), companyLocation.getAddress(), companyLocation.getLatitude(), companyLocation.getLongitude(), companyLocation.getIsPrimary(), companyLocation.getPrivacyLevel().name());
+			companyLocationDto.setListOfCompanyContactDetailsDto(companyLocation.getListOfCompanyContactDetail().stream().map(companyContactDetail -> new CompanyContactDetailsDto(companyContactDetail.getId(), companyContactDetail.getKey(), companyContactDetail.getValue())).collect(Collectors.toList()));
+			companyLocationDto.setListOfCompanyWorkingHoursDto(companyLocation.getListOfCompanyWorkingHours().stream().map(companyWorkingHour -> new CompanyWorkingHoursDto(companyWorkingHour.getId(), companyWorkingHour.getWeekDay(), companyWorkingHour.getIsOffDay(), companyWorkingHour.getOpeningAt().toString(), companyWorkingHour.getClosingAt().toString())).collect(Collectors.toList()));
+			companyDto.getLocations().add(companyLocationDto);
+		});
+		companyDto.setSpecialitys(company.getListOfCompanySpeciality().stream().map(companySpeciality -> new CompanySpecialityDto(companySpeciality.getId(), companySpeciality.getSpeciality().getId(),companySpeciality.getSpeciality().getSpecialityName())).collect(Collectors.toList()));
 		return companyDto;
 	}
 	

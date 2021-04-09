@@ -1,11 +1,8 @@
 package com.yuzee.company.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,7 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -68,8 +64,8 @@ public class CompanyPreferredCoursePrimaryDetail implements Serializable {
 	@JoinColumn( name = "company_id", insertable = true, updatable = false , nullable = false)
 	private Company company;
 	
-	@OneToMany(mappedBy = "companyPreferredCoursePrimaryDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<CompanyPreferredCourse> listOfCompanyPreferredCourse = new ArrayList<>();
+	//@OneToMany(mappedBy = "companyPreferredCoursePrimaryDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	//private List<CompanyPreferredCourse> listOfCompanyPreferredCourse = new ArrayList<>();
 
 	public CompanyPreferredCoursePrimaryDetail(PrivacyLevelEnum privacyLevel, Date createdOn, Date updatedOn,
 			String createdBy, String updatedBy) {
@@ -84,10 +80,5 @@ public class CompanyPreferredCoursePrimaryDetail implements Serializable {
 	public void addCompany(Company company) {
 		this.company = company;
 		company.setCompanyPreferredCoursePrimaryDetail(this);
-	}
-	
-	public void addCompanyPreferredCourse(CompanyPreferredCourse companyPreferredCourse) {
-		this.listOfCompanyPreferredCourse.add(companyPreferredCourse);
-		companyPreferredCourse.setCompanyPreferredCoursePrimaryDetail(this);
 	}
 }

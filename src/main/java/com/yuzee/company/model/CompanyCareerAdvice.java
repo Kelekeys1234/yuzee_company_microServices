@@ -54,6 +54,12 @@ public class CompanyCareerAdvice implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "companyCareerAdvice")
 	private List<CompanyEmployee> listOfCompanyEmployee = new ArrayList<>();
 	
+	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "companyCareerAdvice")
+	private List<CompanyCareerAdviceCollaboration> listOfCompanyCareerAdviceCollaboration = new ArrayList<>();
+	
+	@OneToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "companyCareerAdvice")
+	private List<CompanyPreferredCourse> listOfCompanyPreferredCourse = new ArrayList<>(); 
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn( name = "company_id", insertable = true, updatable = false , nullable = false)
 	private Company company;
@@ -84,10 +90,18 @@ public class CompanyCareerAdvice implements Serializable {
 		this.updatedBy = updatedBy;
 	}
 	
-	public void addCompanyEmployee (List<CompanyEmployee> listOfCompanyEmployee) {
-		listOfCompanyEmployee.stream().forEach(companyEmployee -> {
-			companyEmployee.setCompanyCareerAdvice(this);
-			this.listOfCompanyEmployee.add(companyEmployee);
-		});
+	public void addCompanyEmployee(CompanyEmployee companyEmployee) {
+		companyEmployee.setCompanyCareerAdvice(this);
+		this.listOfCompanyEmployee.add(companyEmployee);
+	}
+	
+	public void addCompanyCareerAdviceCollaboration (CompanyCareerAdviceCollaboration companyCareerAdviceCollaboration) {
+		companyCareerAdviceCollaboration.setCompanyCareerAdvice(this);
+		this.listOfCompanyCareerAdviceCollaboration.add(companyCareerAdviceCollaboration);
+	}
+	
+	public void addCompanyPreferredCourse (CompanyPreferredCourse companyPreferredCourse) {
+		companyPreferredCourse.setCompanyCareerAdvice(this);
+		this.listOfCompanyPreferredCourse.add(companyPreferredCourse);
 	}
 }

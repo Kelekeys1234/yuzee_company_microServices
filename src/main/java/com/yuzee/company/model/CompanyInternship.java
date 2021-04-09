@@ -51,8 +51,14 @@ public class CompanyInternship implements Serializable {
 	@Column(name = "description", nullable = false,columnDefinition = "text")
 	private String description;
 	
+	@Column(name = "education_need",columnDefinition = "text")
+	private String educationNeed;
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "companyInternship" , cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<InternshipMember> listOfInternshipMember = new ArrayList<>();
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "companyInternship" , cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<InternshipSkill> listOfInternshipSkill = new ArrayList<>();
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn( name = "company_id", insertable = true, updatable = false , nullable = false)
@@ -91,5 +97,8 @@ public class CompanyInternship implements Serializable {
 		});
 	}
 	
-	
+	public void addInternshipSkill(InternshipSkill internshipSkill) {
+		internshipSkill.setCompanyInternship(this);
+		this.listOfInternshipSkill.add(internshipSkill);
+	}
 }

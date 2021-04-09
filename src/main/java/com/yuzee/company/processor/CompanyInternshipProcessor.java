@@ -18,6 +18,8 @@ import org.springframework.util.ObjectUtils;
 import com.yuzee.company.dao.CompanyDao;
 import com.yuzee.company.dao.CompanyInternshipDao;
 import com.yuzee.company.dto.CompanyInternshipDto;
+import com.yuzee.company.dto.InternshipEducationNeedDto;
+import com.yuzee.company.dto.InternshipSkillsDto;
 import com.yuzee.company.dto.StorageDto;
 import com.yuzee.company.enumeration.EntitySubTypeEnum;
 import com.yuzee.company.enumeration.EntityTypeEnum;
@@ -30,6 +32,7 @@ import com.yuzee.company.handler.StorageHandler;
 import com.yuzee.company.model.Company;
 import com.yuzee.company.model.CompanyInternship;
 import com.yuzee.company.model.InternshipMember;
+import com.yuzee.company.model.InternshipSkill;
 import com.yuzee.company.utills.ValidationUtills;
 
 import lombok.extern.slf4j.Slf4j;
@@ -197,5 +200,59 @@ public class CompanyInternshipProcessor {
 		log.info("Saving CompanyInternship into DB ");
 		companyInternshipDto.setCompanyInternshipId(companyInternshipDao.addUpdateCompanyInternship(companyInternship).getId());
 		return companyInternshipDto;
+	}
+	
+	@Transactional(rollbackOn = Throwable.class)
+	public void addUpdateEducationNeed(String userId , String companyId, String internshipId, InternshipEducationNeedDto internshipEducationNeedDto) throws NotFoundException, UnauthorizeException, BadRequestException {
+		log.debug("Inside CompanyInternshipProcessor.addUpdateEducationNeed () method");
+		log.info("Getting company with companyId {}", companyId);
+		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
+		if (!optionalCompany.isPresent()) {
+			log.error("No company found for company id {}", companyId);
+			throw new NotFoundException("No company found for company id " + companyId);
+		}
+
+		log.info("Validting user have access for company");
+		ValidationUtills.validateUserAccess(userId, optionalCompany.get());
+		log.info("Getting all internship for company id {}", companyId);
+		CompanyInternship companyInternship = companyInternshipDao.getCompanyInternshipByCompanyIdAndId(companyId,
+				internshipId);
+		if (ObjectUtils.isEmpty(companyInternship)) {
+			log.error("No company internship found for company id {} and internship id {}",companyId, internshipId);
+			throw new NotFoundException("No company internship found for company id "+companyId+  " and internship id " + internshipId);
+		}
+		companyInternship.setEducationNeed(internshipEducationNeedDto.getEducationNeed());
+		companyInternship.setUpdatedBy("API");
+		companyInternship.setUpdatedOn(new Date());
+		log.info("Saving CompanyInternship into DB ");
+		companyInternshipDao.addUpdateCompanyInternship(companyInternship);
+	}
+	
+	@Transactional(rollbackOn = Throwable.class)
+	public void addUpdateInternshipSkill(String userId , String companyId, String internshipId, InternshipSkillsDto internshipSkillsDto) throws NotFoundException, UnauthorizeException, BadRequestException {
+		log.debug("Inside CompanyInternshipProcessor.addUpdateEducationNeed () method");
+		log.info("Getting company with companyId {}", companyId);
+		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
+		if (!optionalCompany.isPresent()) {
+			log.error("No company found for company id {}", companyId);
+			throw new NotFoundException("No company found for company id " + companyId);
+		}
+
+		log.info("Validting user have access for company");
+		ValidationUtills.validateUserAccess(userId, optionalCompany.get());
+		log.info("Getting all internship for company id {}", companyId);
+		CompanyInternship companyInternship = companyInternshipDao.getCompanyInternshipByCompanyIdAndId(companyId,
+				internshipId);
+		if (ObjectUtils.isEmpty(companyInternship)) {
+			log.error("No company internship found for company id {} and internship id {}",companyId, internshipId);
+			throw new NotFoundException("No company internship found for company id "+companyId+  " and internship id " + internshipId);
+		}
+		log.info("Adding all company skills present in request and not in db");
+		List<String> listOfCompanySkillsBeAdded = internshipSkillsDto.getSkills().stream().filter(skillName -> !companyInternship.getListOfInternshipSkill().stream().anyMatch(internshipSkill -> internshipSkill.getSkillName().equalsIgnoreCase(skillName))).collect(Collectors.toList());
+		log.info("Removing all company skill in db and not passed in requet");
+		companyInternship.getListOfInternshipSkill().removeIf(internshipSkill -> !internshipSkillsDto.getSkills().stream().anyMatch(skillName -> skillName.equalsIgnoreCase(internshipSkill.getSkillName())));
+		log.info("Creating  InternshipSkill model from user id passed in request");
+		listOfCompanySkillsBeAdded.stream().map(skillName -> new InternshipSkill(skillName, new Date(),  new Date(), "API", "API")).forEach(companyInternship::addInternshipSkill);
+		companyInternshipDao.addUpdateCompanyInternship(companyInternship);
 	}
 }

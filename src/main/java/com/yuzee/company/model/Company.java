@@ -22,6 +22,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.yuzee.company.enumeration.CompanyType;
 import com.yuzee.company.enumeration.IndustryType;
 
 import lombok.AllArgsConstructor;
@@ -60,6 +61,13 @@ public class Company implements Serializable {
 	
 	@Column(name = "industry")
 	private String industry;
+	
+	@Column(name = "website_url")
+	private String websiteUrl;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "company_type")
+	private CompanyType companyType;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "industry_type")
@@ -100,7 +108,6 @@ public class Company implements Serializable {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "company" , cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CompanyInternship> listOfCompanyInternship = new ArrayList<>();
-	
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_on", length = 19)

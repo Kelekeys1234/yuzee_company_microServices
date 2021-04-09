@@ -14,6 +14,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.yuzee.company.dto.CompanyInternshipDto;
+import com.yuzee.company.dto.InternshipEducationNeedDto;
+import com.yuzee.company.dto.InternshipSkillsDto;
 import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
@@ -44,4 +46,12 @@ public interface CompanyInternshipInterface {
 	@Path("/company/{companyId}/internship/{companyInternshipId}")
 	public Response getCompanyInternship(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("companyInternshipId") String companyInternshipId) throws NotFoundException, ServiceInvokeException;
 
+	
+	@POST
+	@Path("/company/{companyId}/internship/{companyInternshipId}/education-need")
+	public Response addUpdateCompanyEducationNeed(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("companyInternshipId") String companyInternshipId, @Valid   @NotNull(message = "Request body should not be null/empty") InternshipEducationNeedDto internshipEducationNeedDto) throws NotFoundException, UnauthorizeException, BadRequestException;
+	
+	@POST
+	@Path("/company/{companyId}/internship/{companyInternshipId}/skill")
+	public Response addUpdateCompanyInternshipSkill(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("companyInternshipId") String companyInternshipId, @Valid   @NotNull(message = "Request body should not be null/empty") InternshipSkillsDto internshipSkillsDto) throws NotFoundException, UnauthorizeException, BadRequestException;
 }

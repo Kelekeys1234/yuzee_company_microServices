@@ -29,6 +29,9 @@ public class CompanyCareerAdviceDto {
 	@JsonProperty("created_date")
 	private Date createdDate;
 	
+	@JsonProperty("collaborations")
+	private Set<String> collaborations = new HashSet<String>();
+	
 	@JsonProperty("user_in_employment")
 	private Set<String> userInEmployment = new HashSet<String>();
 	

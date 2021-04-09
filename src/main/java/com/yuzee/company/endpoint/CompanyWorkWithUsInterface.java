@@ -22,10 +22,6 @@ import com.yuzee.company.exception.UnauthorizeException;
 @Produces({ "application/json", "application/xml" })
 public interface CompanyWorkWithUsInterface {
 	
-	@GET
-	@Path("/company/work-with-us/enum/value")
-	public Response getAllWorkWithUsEnumValues();
-	
 	@POST
 	@Path("/company/{companyId}/work-with-us")
 	public Response addUpdateCompanyWorkWithUs(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId, 

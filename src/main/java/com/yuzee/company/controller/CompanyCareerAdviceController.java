@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yuzee.company.dto.CompanyCareerAdviceDto;
+import com.yuzee.company.dto.CompanyPreferredCourseDetailsDto;
+import com.yuzee.company.dto.EmployedUserDto;
 import com.yuzee.company.endpoint.CompanyCareerAdviceInterface;
 import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
@@ -54,5 +56,21 @@ public class CompanyCareerAdviceController implements CompanyCareerAdviceInterfa
 		companyCareerAdviceProcessor.deleteCompanyCareerAdvice(userId, companyId, careerAdviceId);
 		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setMessage("Company career advice deleted successfully")
 				.create();
+	}
+
+	@Override
+	public Response addUpdateCareerAdviceEmployedUser(String userId, String companyId, String careerAdviceId,
+			EmployedUserDto employedUserDto)
+			throws NotFoundException, UnauthorizeException, BadRequestException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response addUpdateCareerAdvicePreferredCourse(String userId, String companyId, String careerAdviceId,
+			 CompanyPreferredCourseDetailsDto companyPreferredCourseDetailsDto)
+			throws NotFoundException, UnauthorizeException, BadRequestException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

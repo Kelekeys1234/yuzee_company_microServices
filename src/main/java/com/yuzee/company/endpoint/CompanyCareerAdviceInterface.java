@@ -1,6 +1,7 @@
 package com.yuzee.company.endpoint;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,12 +15,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.yuzee.company.dto.CompanyCareerAdviceDto;
+import com.yuzee.company.dto.CompanyPreferredCourseDetailsDto;
+import com.yuzee.company.dto.EmployedUserDto;
 import com.yuzee.company.exception.BadRequestException;
 import com.yuzee.company.exception.NotFoundException;
 import com.yuzee.company.exception.ServiceInvokeException;
 import com.yuzee.company.exception.UnauthorizeException;
 
 @Path("/api/v1")
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public interface CompanyCareerAdviceInterface {
 	
 	@POST
@@ -38,4 +43,13 @@ public interface CompanyCareerAdviceInterface {
 	@Path("/company/{companyId}/career-advice/{careerAdviceId}")
 	public Response deleteCareerAdvice(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("careerAdviceId") String careerAdviceId) throws NotFoundException, ServiceInvokeException, UnauthorizeException;
 
+	@POST
+	@Path("/company/{companyId}/career-advice/{careerAdviceId}/employed-user")
+	public Response addUpdateCareerAdviceEmployedUser(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("careerAdviceId") String careerAdviceId,  @Valid  @NotEmpty(message = "Request body should not be null/empty")  EmployedUserDto employedUserDto) throws NotFoundException, UnauthorizeException, BadRequestException;
+
+	@POST
+	@Path("/company/{companyId}/career-advice/{careerAdviceId}/preferred-course")
+	public Response addUpdateCareerAdvicePreferredCourse(@HeaderParam("userId") String userId, @PathParam("companyId") String companyId , @PathParam("careerAdviceId") String careerAdviceId,  @Valid  @NotEmpty(message = "Request body should not be null/empty")  CompanyPreferredCourseDetailsDto companyPreferredCourseDetailsDto) throws NotFoundException, UnauthorizeException, BadRequestException;
+
+	
 }

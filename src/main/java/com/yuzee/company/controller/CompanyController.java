@@ -27,21 +27,21 @@ public class CompanyController implements CompanyInterface {
 	@Override
 	public Response addCompanyInitialInfo(String userId, CompanyDto companyDto) throws BadRequestException {
 		log.info("Inside CompanyController.addCompanyInitialInfo () method");
-		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyProcessor.addCompanyInitialInfo(userId, companyDto)).setMessage("Company initial info added successfully")
+		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyProcessor.addCompanyInfo(userId, companyDto)).setMessage("Company initial info added successfully")
 				.create();
 	}
 
 	@Override
 	public Response updateCompanyInitialInfo(String userId, String companyId, CompanyDto companyDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Inside CompanyController.updateCompanyInitialInfo () method");
-		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyProcessor.updateCompanyInitialInfo(userId, companyId, companyDto)).setMessage("Company initial info updated successfully")
+		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyProcessor.updateCompanyInfo(userId, companyId, companyDto)).setMessage("Company initial info updated successfully")
 				.create();
 	}
 
 	@Override
 	public Response getCompanyInitialInfo(String userId, String companyId) throws NotFoundException, ServiceInvokeException {
 		log.info("Inside CompanyController.getCompanyInitialInfo () method");
-		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyProcessor.getCompanyInitialInfo(userId, companyId)).setMessage("Company initial info fetched successfully")
+		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(companyProcessor.getCompanyInfo(userId, companyId)).setMessage("Company initial info fetched successfully")
 				.create();
 	}
 }

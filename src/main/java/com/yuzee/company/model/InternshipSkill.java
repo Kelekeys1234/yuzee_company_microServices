@@ -26,14 +26,13 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "company_preferred_course", uniqueConstraints = @UniqueConstraint( columnNames = { "course_id","course_name","company_career_advice_id"}, name = "UK_CPC_CI_CN_CPCPDII"),
-indexes = { @Index (name = "IDX_COMPANY_PREFERRED_COURSE_CPCPD", columnList="company_career_advice_id", unique = false)})
-public class CompanyPreferredCourse implements Serializable {
+@Table(name = "internship_skill")
+public class InternshipSkill implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5547526321763417776L;
+	private static final long serialVersionUID = 4936204452643937307L;
 	
 	@Id
 	@GenericGenerator(name = "generator", strategy = "guid", parameters = {})
@@ -41,38 +40,33 @@ public class CompanyPreferredCourse implements Serializable {
 	@Column(name = "id", unique = true, nullable = false, length=36)
 	private String id;
 	
-	@Column(name = "course_name", nullable = false)
-	private String courseName;
-		
-	@Column(name = "course_id", nullable = false)
-	private String courseId;
+	@Column(name = "skill_name", nullable = false)
+	private String skillName;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn( name = "company_internship_id", insertable = true, updatable = false , nullable = false)
+	private CompanyInternship companyInternship;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_on", length = 19)
 	private Date createdOn;
-
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "updated_on", length = 19)
 	private Date updatedOn;
-
+	
 	@Column(name = "created_by", length = 50)
 	private String createdBy;
-
+	
 	@Column(name = "updated_by", length = 50)
 	private String updatedBy;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn( name = "company_career_advice_id", insertable = true, updatable = false , nullable = false)
-	private CompanyCareerAdvice companyCareerAdvice;
-	
-	public CompanyPreferredCourse(String courseName, Date createdOn, Date updatedOn, String createdBy, String updatedBy,
-			 String courseId) {
+
+	public InternshipSkill(String skillName, Date createdOn, Date updatedOn, String createdBy, String updatedBy) {
 		super();
-		this.courseName = courseName;
+		this.skillName = skillName;
 		this.createdOn = createdOn;
 		this.updatedOn = updatedOn;
 		this.createdBy = createdBy;
 		this.updatedBy = updatedBy;
-		this.courseId = courseId;
 	}
 }

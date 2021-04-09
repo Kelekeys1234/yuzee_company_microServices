@@ -27,13 +27,6 @@ public class CompanyWorkWithUsController implements CompanyWorkWithUsInterface {
 
 	@Autowired
 	private CompanyWorkWithUsProcessor companyWorkWithUsProcessor;
-	
-	@Override
-	public Response getAllWorkWithUsEnumValues() {
-		log.info("Inside CompanyWorkWithUsController.getAllWorkWithUsEnumValues() method");
-		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(Arrays.asList(WorkWithUs.values())).setMessage("Work with us enum value fetch successfully")
-				.create();
-	}
 
 	@Override
 	public Response addUpdateCompanyWorkWithUs(String userId, String companyId,
