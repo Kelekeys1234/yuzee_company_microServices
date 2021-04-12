@@ -37,9 +37,8 @@ public class SpecialityProcessor {
 		}
 	}
 	
-	public List<SpecialityDto> getSpeciality (String searchText) {
-		log.info("Getting speciality for search text {}",searchText);
-		List<Speciality> listOfSpeciality = specialityDao.getSpeciality(searchText);
+	public List<SpecialityDto> getSpeciality() {
+		List<Speciality> listOfSpeciality = specialityDao.getAllSpeciality();
 		return listOfSpeciality.stream().map(specialty -> new SpecialityDto(specialty.getId(), specialty.getSpecialityName())).collect(Collectors.toList());
 	}
 }

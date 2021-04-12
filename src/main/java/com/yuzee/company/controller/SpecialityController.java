@@ -23,9 +23,9 @@ public class SpecialityController implements SpecialityInterface {
 	private SpecialityProcessor specialityProcessor;
 
 	@Override
-	public Response getSpecialityBySearchText(String searchText) {
-		log.info("Inside SpecialityController.getSpecialityBySearchText() method");
-		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(specialityProcessor.getSpeciality(searchText)).setMessage("Speciality fetched successfully")
+	public Response getAllSpeciality() {
+		log.info("Inside SpecialityController.getAllSpeciality() method");
+		return new GenericResponseHandlers.Builder().setStatus(Status.OK).setData(specialityProcessor.getSpeciality()).setMessage("Speciality fetched successfully")
 				.create();
 	}
 

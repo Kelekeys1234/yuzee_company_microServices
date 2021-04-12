@@ -9,7 +9,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import com.yuzee.company.dto.SpecialityDto;
@@ -21,7 +20,7 @@ public interface SpecialityInterface {
 	
 	@GET
 	@Path("/speciality")
-	public Response getSpecialityBySearchText(@QueryParam("search_text") String searchText );
+	public Response getAllSpeciality();
 	
 	@POST
 	@Path("/admin/speciality")
