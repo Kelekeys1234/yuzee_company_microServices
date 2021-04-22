@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -46,6 +48,7 @@ public class CompanyProcessor {
 	@Autowired
 	private SpecialityDao specialityDao;
 	
+	@Transactional(rollbackOn = Throwable.class)
 	public CompanyDto addCompanyInfo (String userId , CompanyDto companyDto) throws BadRequestException {
 		log.info("Creating company model by name {} by userId {}", companyDto.getCompanyName(),userId);
 		Company company = DTOUtills.initiateCompanyModelFromCompanyDto(companyDto);
@@ -64,6 +67,7 @@ public class CompanyProcessor {
 		return companyDto;
 	}
 	
+	@Transactional(rollbackOn = Throwable.class)
 	public CompanyDto updateCompanyInfo (String userId, String companyId , CompanyDto companyDto) throws NotFoundException, UnauthorizeException, BadRequestException {
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);
@@ -81,6 +85,7 @@ public class CompanyProcessor {
 		return companyDto;
 	}
 	
+	@Transactional(rollbackOn = Throwable.class)
 	public CompanyDto getCompanyInfo (String userId , String companyId) throws NotFoundException {
 		log.info("Getting company with companyId {}", companyId);
 		Optional<Company> optionalCompany = companyDao.getCompanyById(companyId);

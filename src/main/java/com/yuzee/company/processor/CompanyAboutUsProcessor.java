@@ -101,9 +101,8 @@ public class CompanyAboutUsProcessor {
 		CompanyAboutUsDto companyAboutUsDto = DTOUtills.populateCompanyAboutUsDtoFromCompanyModel(optionalCompany.get());
 		log.info("Calling storeage service to fetch videos for company id {}",companyId);
 		try {
-			 videos = storageHandler.getStoragesResponse(companyId, EntityTypeEnum.COMPANY, EntitySubTypeEnum.VIDEO, Arrays.asList(PrivacyLevelEnum.PUBLIC.name() ));
-			 
-		} catch (NotFoundException | ServiceInvokeException e) {
+			 videos = storageHandler.getStoragesResponse(companyId, EntityTypeEnum.COMPANY, EntitySubTypeEnum.VIDEO, Arrays.asList(PrivacyLevelEnum.PUBLIC.name())); 
+		} catch (Exception e) {
 			log.error("Exception occured while calling storage for fetching videos for company id {}",companyId);
 		}
 		companyAboutUsDto.setVideos(videos);

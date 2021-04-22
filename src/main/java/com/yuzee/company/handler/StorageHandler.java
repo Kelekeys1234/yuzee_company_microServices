@@ -57,8 +57,8 @@ public class StorageHandler {
 			uriBuilder.queryParam("entity_type", entityType.name());
 			entitySubTypeEnums.forEach(subType -> uriBuilder.queryParam("entity_sub_type",subType));
 			privacyLevels.forEach(privacyLevel -> uriBuilder.queryParam("privacy_level",privacyLevel));
-			log.info("Calling storage service to fetch for entity Id {} and entity_sub_types {}",
-					entityIds,
+			log.info("Calling storage service to fetch for entity Id {} and entity type {} and entity_sub_types {}",
+					entityIds,entityType,
 					entitySubTypeEnums);
 			getStoragesResponse = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, null,
 					new ParameterizedTypeReference<ResponseDtoWrapper<List<StorageDto>>>() {});

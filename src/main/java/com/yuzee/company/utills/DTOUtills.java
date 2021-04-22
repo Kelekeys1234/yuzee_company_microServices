@@ -126,7 +126,7 @@ public class DTOUtills {
 		CompanyAboutUsDto companyAboutUsDto = new CompanyAboutUsDto();
 		companyAboutUsDto.setDescription(company.getAboutUs());
 		companyAboutUsDto.setIndustry(company.getIndustry());
-		companyAboutUsDto.setIndustryType(company.getIndustryType().toString());
+		companyAboutUsDto.setIndustryType(company.getIndustryType().name());
 		companyAboutUsDto.setYearFounded(company.getYearFounder());
 		companyAboutUsDto.setSpeciality(company.getListOfCompanySpeciality().stream().map(companySpeciality -> new CompanySpecialityDto(companySpeciality.getId(), companySpeciality.getSpeciality().getId(),companySpeciality.getSpeciality().getSpecialityName())).collect(Collectors.toList()));
 		return companyAboutUsDto;
