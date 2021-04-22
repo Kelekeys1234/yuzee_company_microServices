@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "company_working_hour", uniqueConstraints = @UniqueConstraint( columnNames = { "week_day"}, name = "UK_CWH_WEEK_DAY"),
+@Table(name = "company_working_hour", uniqueConstraints = @UniqueConstraint( columnNames = { "week_day","company_location_id"}, name = "UK_WEEK_DAY_LOCATION_ID"),
 indexes = { @Index (name = "IDX_COMPANY_WORKING_HOUR_CLI", columnList="company_location_id", unique = false)})
 public class CompanyWorkingHours implements Serializable {
 	

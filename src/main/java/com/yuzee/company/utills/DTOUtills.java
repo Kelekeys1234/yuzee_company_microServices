@@ -50,6 +50,8 @@ public class DTOUtills {
 
 	private static  DateFormat formatter = new SimpleDateFormat("hh:mm a");
 	
+	private static SimpleDateFormat convertToTwelveHourFormat  = new SimpleDateFormat("hh:mm:ss");
+	
 	public static Company initiateCompanyModelFromCompanyDto(CompanyDto companyDto) {
 		Company company = new Company();
 		company.setCompanyName(companyDto.getCompanyName());
@@ -97,6 +99,7 @@ public class DTOUtills {
 		CompanyDto companyDto = new CompanyDto();
 		companyDto.setId(company.getId());
 		companyDto.setCompanyName(company.getCompanyName());
+		companyDto.setCompanyType(company.getCompanyType().name());
 		companyDto.setDescription(company.getAboutUs());
 		companyDto.setTagLine(company.getTagLine());
 		companyDto.setIndustry(company.getIndustry());
@@ -105,7 +108,15 @@ public class DTOUtills {
 		company.getListOfCompanyLocation().stream().forEach(companyLocation -> {
 			CompanyLocationDto companyLocationDto = new CompanyLocationDto(companyLocation.getId(), companyLocation.getName(), companyLocation.getCity(), companyLocation.getState(), companyLocation.getCountry(), companyLocation.getPostalCode(), companyLocation.getAddress(), companyLocation.getLatitude(), companyLocation.getLongitude(), companyLocation.getIsPrimary(), companyLocation.getPrivacyLevel().name());
 			companyLocationDto.setListOfCompanyContactDetailsDto(companyLocation.getListOfCompanyContactDetail().stream().map(companyContactDetail -> new CompanyContactDetailsDto(companyContactDetail.getId(), companyContactDetail.getKey(), companyContactDetail.getValue())).collect(Collectors.toList()));
-			companyLocationDto.setListOfCompanyWorkingHoursDto(companyLocation.getListOfCompanyWorkingHours().stream().map(companyWorkingHour -> new CompanyWorkingHoursDto(companyWorkingHour.getId(), companyWorkingHour.getWeekDay(), companyWorkingHour.getIsOffDay(), companyWorkingHour.getOpeningAt().toString(), companyWorkingHour.getClosingAt().toString())).collect(Collectors.toList()));
+			companyLocationDto.setListOfCompanyWorkingHoursDto(companyLocation.getListOfCompanyWorkingHours().stream().map(companyWorkingHour -> {
+				CompanyWorkingHoursDto companyWorkingHoursDto = new CompanyWorkingHoursDto();
+				try {
+					companyWorkingHoursDto = new CompanyWorkingHoursDto(companyWorkingHour.getId(), companyWorkingHour.getWeekDay(), companyWorkingHour.getIsOffDay(), formatter.format(convertToTwelveHourFormat.parse(companyWorkingHour.getOpeningAt().toString())) , formatter.format(convertToTwelveHourFormat.parse(companyWorkingHour.getClosingAt().toString())));
+				} catch (ParseException e) {
+					log.error("Exception while parsing date to string {}",e);
+				}
+				return companyWorkingHoursDto;
+			}).collect(Collectors.toList()));
 			companyDto.getLocations().add(companyLocationDto);
 		});
 		companyDto.setSpecialitys(company.getListOfCompanySpeciality().stream().map(companySpeciality -> new CompanySpecialityDto(companySpeciality.getId(), companySpeciality.getSpeciality().getId(),companySpeciality.getSpeciality().getSpecialityName())).collect(Collectors.toList()));
